@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from prompt_toolkit import PromptSession
+import commands
 
 
 def main():
@@ -8,13 +9,18 @@ def main():
     while True:
         try:
             text = session.prompt('> ')
-        except KeyboardInterrupt:
+
+            terminate = commands.handle(text)
+
+            if terminate:
+                break
+
+        except KeyboardInterrupt as e:
             continue
+
         except EOFError:
+            commands.handle('close')
             break
-        else:
-            print('You entered:', text)
-    print('GoodBye!')
 
 
 if __name__ == '__main__':
