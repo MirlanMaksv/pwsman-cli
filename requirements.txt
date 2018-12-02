@@ -1,4 +1,4 @@
 click
-fire
 prompt_toolkit
 pycryptodome
+tinydb

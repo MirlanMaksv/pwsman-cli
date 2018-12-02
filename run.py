@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 from prompt_toolkit import PromptSession
-import click
 
 
 def main():
@@ -15,8 +14,6 @@ def main():
             break
         else:
             print('You entered:', text)
-        if click.confirm('Do you want to continue?'):
-            click.echo('Well done!')
     print('GoodBye!')
 
 
