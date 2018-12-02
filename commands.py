@@ -1,5 +1,5 @@
 import click
-from account import Manager, Account
+from account import manager, Account
 
 
 def handle(text):
@@ -19,18 +19,30 @@ def handle(text):
 
 
 @click.command()
-@click.argument('a', type=click.INT, required=True)
-@click.argument('b', type=click.INT, required=True)
-def add(a, b):
-    click.echo(a + b)
+@click.option('-u', '--user', type=click.STRING, required=True)
+@click.option('--password', prompt=True, hide_input=True)
+def login(user, password):
+    found = manager.login(user, password)
+    if not found:
+        click.echo("Login or password incorrect")
 
 
-def login(name, password):
-    pass
+@click.command()
+@click.option('-u', '--user', type=click.STRING, required=True)
+@click.password_option()
+@click.option('-h', '--hint', type=click.STRING, required=False)
+def create(user, password, hint):
+    manager.create_account(user, password, hint=hint)
 
 
-def create():
-    pass
+@click.command()
+def credential():
+    username = click.prompt("Enter username ")
+    password = click.prompt("Enter password ")
+    url = click.prompt("Enter url ")
+    comment = click.prompt("[Optional] Enter comment ", default="", show_default=False)
+
+    manager.active_account.create_credential()
 
 
 def close(_):
@@ -45,9 +57,9 @@ def help(ctx):
 
 
 commands = {
-    'add': add,
     'login': login,
     'create': create,
     'close': close,
     'help': help,
+    'credential': credential,
 }

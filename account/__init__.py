@@ -1,2 +1,2 @@
 from .Account import Account
-from .Manager import Manager
+from .Manager import manager
