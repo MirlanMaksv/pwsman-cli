@@ -1,4 +1,5 @@
 import click
+from tabulate import tabulate
 from cli import cli, ask, number_validator
 from account import manager
 from keys import *
@@ -24,24 +25,61 @@ def add():
 
 
 @cred.command('list')
-def _list():
-    show()
+@click.option('--show-psw', is_flag=True)
+def _list(show_psw):
+    acc = manager.get_active_account()
+    show(acc.get_credentials(), show_psw=show_psw)
 
 
-@cred.command('remove')
+@cred.command()
+@click.option('--username', help='Search by username')
+@click.option('--url', help='Search by url')
+@click.option('--show-psw', is_flag=True)
+def search(username, url, show_psw):
+    acc = manager.get_active_account()
+    credentials = acc.get_credentials()
+    if username:
+        credentials = acc.filter_by(username, K_USERNAME, credentials)
+    if url:
+        credentials = acc.filter_by(url, K_URL, credentials)
+
+    show(credentials, fields_to_hide=[K_URL], show_psw=show_psw)
+
+
+@cred.command()
 def remove():
-    show()
+    acc = manager.get_active_account()
+    show(acc.get_credentials())
+
     question = {'index': {K_QUESTION: 'Enter credential number to remove : ',
                           K_CONFIG: {'validator': number_validator}}}
     answer = ask(question)
     index = int(answer['index']) - 1
 
-    acc = manager.get_active_account()
     cred = acc.remove_credential(index)
     click.echo("Removed {username} {url}".format(username=cred.username, url=cred.url))
 
 
-def show():
-    acc = manager.get_active_account()
-    for i, c in enumerate(acc.get_credentials()):
-        print("{})".format(i+1), c.username, c.url, c.password, c.comment)
+def show(credentials, fields_to_hide=[], show_psw=False):
+    headers = []
+    fields = vars(credentials[0])
+    for field in fields.keys():
+        if field not in fields_to_hide:
+            headers.append(field.capitalize())
+
+    data = []
+    for i, c in enumerate(credentials):
+        data.append(get_as_array(c, fields_to_hide, show_psw))
+
+    click.echo(tabulate(data, headers, tablefmt='psql'))
+
+
+def get_as_array(obj, fields_to_hide, show_psw):
+    res = []
+    for key, value in vars(obj).items():
+        if key == K_PASSWORD and not show_psw:
+            res.append("*" * 8)
+        elif key not in fields_to_hide:
+            res.append(value)
+
+    return res

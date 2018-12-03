@@ -7,6 +7,7 @@ class Manager:
         self.accounts = [Account("Master_user", "1234")]
         self.active_account = self.accounts[0]
         self.active_account.add_credential("example_username", "abcdef1234", "example.com", "some comment")
+        self.active_account.add_credential("Mirlan", "abcdef1234", "facebook.com", "Facebook account credentials")
 
     def login(self, master_name, master_key):
         loggedin = False

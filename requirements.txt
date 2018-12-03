@@ -2,3 +2,4 @@ click
 prompt_toolkit
 pycryptodome
 tinydb
+tabulate
