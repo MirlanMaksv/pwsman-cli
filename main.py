@@ -1,6 +1,6 @@
 from prompt_toolkit import PromptSession
 from account import manager
-import commands
+import cli
 
 
 def main():
@@ -12,11 +12,11 @@ def main():
             prompt_text = "> "
 
             if active_user:
-                prompt_text = "{}> ".format(active_user.username)
+                prompt_text = "{}> ".format(active_user.master_name)
 
             text = session.prompt(prompt_text)
 
-            terminate = commands.handle(text)
+            terminate = cli.handle(text)
 
             if terminate:
                 break
@@ -25,7 +25,7 @@ def main():
             continue
 
         except EOFError:
-            commands.handle('close')
+            cli.handle('close')
             break
 
 

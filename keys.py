@@ -1,0 +1,6 @@
+K_USERNAME = "username"
+K_PASSWORD = "password"
+K_URL = "url"
+K_COMMENT = "comment"
+K_CONFIG = "config"
+K_QUESTION = "question"

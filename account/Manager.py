@@ -4,8 +4,9 @@ from .Account import Account
 class Manager:
 
     def __init__(self):
-        self.accounts = [Account("Mars", "1234")]
+        self.accounts = [Account("Master_user", "1234")]
         self.active_account = self.accounts[0]
+        self.active_account.add_credential("example_username", "abcdef1234", "example.com", "some comment")
 
     def login(self, master_name, master_key):
         loggedin = False
@@ -27,7 +28,6 @@ class Manager:
     def create_account(self, master_name, master_key, hint):
         acc = Account(master_name, master_key, hint=hint)
         self.accounts.append(acc)
-        print(self.accounts)
 
     def remove_account(self, master_name, master_key):
         pass

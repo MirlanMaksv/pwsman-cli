@@ -17,12 +17,15 @@ class Account:
             if c.url == url:
                 return c
 
-    def add_credential(self, username, password, url, comment=None):
+    def add_credential(self, username=None, password=None, url=None, comment=None):
         c = Credential(username, password, url, comment=comment)
         self.credentials.append(c)
 
-    def remove_credential(self, name):
-        pass
+    def remove_credential(self, index):
+        if index >= len(self.credentials):
+            return
 
-    def update_credential(self, name=None, url=None, password=None, comment=None):
+        self.credentials.pop(index)
+
+    def update_credential(self, username=None, password=None, url=None, comment=None):
         pass
