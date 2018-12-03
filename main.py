@@ -4,6 +4,7 @@ import cli
 
 
 def main():
+    cli.init()
     session = PromptSession()
 
     while True:

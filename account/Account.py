@@ -22,10 +22,7 @@ class Account:
         self.credentials.append(c)
 
     def remove_credential(self, index):
-        if index >= len(self.credentials):
+        if index < 0 or index >= len(self.credentials):
             return
 
-        self.credentials.pop(index)
-
-    def update_credential(self, username=None, password=None, url=None, comment=None):
-        pass
+        return self.credentials.pop(index)

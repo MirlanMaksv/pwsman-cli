@@ -1,6 +1,22 @@
-import click
+from prompt_toolkit import prompt
+from prompt_toolkit.validation import Validator
 from account import manager, Account
 from keys import *
+import click
+
+
+def init():
+    from commands.account import login, create
+    from commands.credentials import cred
+
+    global commands
+    commands = {
+        'cli': cli,
+        'login': login,
+        'create': create,
+        'close': close,
+        'cred': cred,
+    }
 
 
 def handle(text):
@@ -47,13 +63,11 @@ def ask(questions):
     return answers
 
 
-from commands.account import login, create
-from commands.credentials import cred
+def is_number(text):
+    return text.isdigit()
 
-commands = {
-    'cli': cli,
-    'login': login,
-    'create': create,
-    'close': close,
-    'cred': cred,
-}
+
+number_validator = Validator.from_callable(
+    is_number,
+    error_message='This input contains non-numeric characters',
+    move_cursor_to_end=True)

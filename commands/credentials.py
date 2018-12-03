@@ -1,5 +1,5 @@
 import click
-from cli import cli, ask
+from cli import cli, ask, number_validator
 from account import manager
 from keys import *
 
@@ -24,7 +24,24 @@ def add():
 
 
 @cred.command('list')
+def _list():
+    show()
+
+
+@cred.command('remove')
+def remove():
+    show()
+    question = {'index': {K_QUESTION: 'Enter credential number to remove : ',
+                          K_CONFIG: {'validator': number_validator}}}
+    answer = ask(question)
+    index = int(answer['index']) - 1
+
+    acc = manager.get_active_account()
+    cred = acc.remove_credential(index)
+    click.echo("Removed {username} {url}".format(username=cred.username, url=cred.url))
+
+
 def show():
     acc = manager.get_active_account()
-    for c in acc.get_credentials():
-        print(c.username, c.url, c.password, c.comment)
+    for i, c in enumerate(acc.get_credentials()):
+        print("{})".format(i+1), c.username, c.url, c.password, c.comment)
