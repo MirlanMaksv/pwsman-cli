@@ -42,18 +42,18 @@ def credential():
     url = click.prompt("Enter url ")
     comment = click.prompt("[Optional] Enter comment ", default="", show_default=False)
 
-    manager.active_account.create_credential()
-
-
-def close(_):
-    click.echo("GoodBye!")
-    return True
+    manager.active_account.add_credential(username, password, url, comment=comment)
 
 
 @click.command()
 @click.pass_context
 def help(ctx):
     click.echo(ctx.get_help())
+
+
+def close(_):
+    click.echo("GoodBye!")
+    return True
 
 
 commands = {

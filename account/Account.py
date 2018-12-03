@@ -1,8 +1,11 @@
+from .Credential import Credential
+
+
 class Account:
 
-    def __init__(self, username, password_hash, credentials=[], hint=""):
-        self.username = username
-        self.password_hash = password_hash
+    def __init__(self, master_name, master_key, credentials=[], hint=""):
+        self.master_name = master_name
+        self.master_key = master_key
         self.credentials = credentials
         self.hint = hint
 
@@ -10,10 +13,13 @@ class Account:
         return self.credentials
 
     def get_credential(self, url):
-        pass
+        for c in self.credentials:
+            if c.url == url:
+                return c
 
-    def create_credential(self, name, password, url, comment=None):
-        pass
+    def add_credential(self, username, password, url, comment=None):
+        c = Credential(username, password, url, comment=comment)
+        self.credentials.append(c)
 
     def remove_credential(self, name):
         pass
