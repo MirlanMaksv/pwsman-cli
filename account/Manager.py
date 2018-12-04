@@ -4,10 +4,10 @@ from .Account import Account
 class Manager:
 
     def __init__(self):
-        self.accounts = [Account("Master_user", "1234")]
+        self.accounts = [Account('Master_user', '1234')]
         self.active_account = self.accounts[0]
-        self.active_account.add_credential("example_username", "abcdef1234", "example.com", "some comment")
-        self.active_account.add_credential("Mirlan", "abcdef1234", "facebook.com", "Facebook account credentials")
+        self.active_account.add_credential('example_username', 'abcdef1234', 'example.com', 'some comment')
+        self.active_account.add_credential('Mirlan', 'abcdef1234', 'facebook.com', 'Facebook account credentials')
 
     def login(self, master_name, master_key):
         loggedin = False
@@ -20,6 +20,9 @@ class Manager:
 
     def logout(self):
         self.active_account = None
+
+    def is_logged_in(self):
+        return self.active_account is not None
 
     def get_active_account(self):
         return self.active_account
