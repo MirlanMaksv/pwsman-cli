@@ -12,6 +12,11 @@ def login(user, password):
         click.echo("Login or password incorrect")
 
 
+@cli.command(help="Logout from account")
+def logout():
+    manager.logout()
+
+
 @cli.command()
 @click.option('-u', '--user', type=click.STRING, required=True)
 @click.password_option()

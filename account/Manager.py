@@ -18,6 +18,9 @@ class Manager:
 
         return loggedin
 
+    def logout(self):
+        self.active_account = None
+
     def get_active_account(self):
         return self.active_account
 

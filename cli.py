@@ -6,13 +6,14 @@ import click
 
 
 def init():
-    from commands.account import login, create
+    from commands.account import login, logout, create
     from commands.credentials import cred
 
     global commands
     commands = {
         'cli': cli,
         'login': login,
+        'logout': logout,
         'create': create,
         'close': close,
         'cred': cred,
@@ -32,12 +33,11 @@ def handle(text):
         res = commands[func](args[1:])
 
     except KeyError:
-        click.echo("Command '{}' is not supported. See 'help' for more information".format(text))
+        echo("Command '{}' is not supported. See 'help' for more information".format(text))
 
     except SystemExit:
-        pass
-
-    return res
+        if text == "close":
+            return True
 
 
 @click.group()
@@ -45,9 +45,20 @@ def cli():
     """A simple Password Manager command line tool."""
 
 
-def close(_):
-    click.echo("GoodBye!")
-    return True
+@cli.command()
+def close():
+    echo("GoodBye!")
+
+
+def echo(*messages):
+    message = ""
+    for m in messages:
+        message += m + " "
+
+    try:
+        click.echo(message)
+    except SystemExit:
+        pass
 
 
 def ask(questions):
