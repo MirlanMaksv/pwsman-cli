@@ -33,8 +33,10 @@ class Manager:
         acc = Account(master_name, master_key, hint=hint)
         self.accounts.append(acc)
 
-    def remove_account(self, master_name, master_key):
-        pass
+    def remove_active_account(self):
+        active = self.get_active_account()
+        self.accounts.remove(active)
+        self.logout()
 
 
 manager = Manager()

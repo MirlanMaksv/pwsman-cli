@@ -6,7 +6,7 @@ import click
 
 
 def init():
-    from commands.account import login, logout, create
+    from commands.account import login, logout, create, remove
     from commands.credentials import cred
 
     global commands
@@ -15,6 +15,7 @@ def init():
         'login': login,
         'logout': logout,
         'create': create,
+        'remove': remove,
         'close': close,
         'cred': cred,
     }
@@ -45,7 +46,7 @@ def cli():
     """A simple Password Manager command line tool."""
 
 
-@cli.command()
+@cli.command(help="Close the shell")
 def close():
     echo("GoodBye!")
 
