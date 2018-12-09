@@ -4,8 +4,8 @@ from account import manager
 
 
 @cli.command(help='Login to your account')
-@click.option('-u', '--user', type=click.STRING, required=True)
-@click.option('--password', prompt=True, hide_input=True)
+@click.option('--user', prompt=True, required=True)
+@click.option('--password', prompt=True, required=True, hide_input=True)
 def login(user, password):
     found = manager.login(user, password)
     if not found:
@@ -13,11 +13,13 @@ def login(user, password):
 
 
 @cli.command(help='Create a new account')
-@click.option('-u', '--user', type=click.STRING, required=True)
+@click.option('--user', prompt=True, required=True)
 @click.password_option()
-@click.option('-h', '--hint', type=click.STRING, required=False)
+@click.option('--hint', prompt=True, default="")
 def create(user, password, hint):
-    manager.create_account(user, password, hint=hint)
+    created = manager.create_account(user, password, hint=hint)
+    if not created:
+        echo('Something went wrong ...')
 
 
 @cli.command(help='Logout from the account')

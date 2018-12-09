@@ -18,7 +18,7 @@ def add():
     questions = {
         K_USERNAME: {K_QUESTION: 'Your username : '},
         K_PASSWORD: {K_QUESTION: 'Your password : ', K_CONFIG: {'is_password': True}},
-        K_URL: {K_QUESTION: 'Your url : '},
+        K_URL: {K_QUESTION: 'Url : '},
         K_COMMENT: {K_QUESTION: '[Optional] Comment : ', K_CONFIG: {'default': ''}}
     }
     answers = ask(questions)
@@ -34,7 +34,10 @@ def _list(show_psw):
         return
 
     acc = manager.get_active_account()
-    show(acc.get_credentials(), show_psw=show_psw)
+
+    credentials = acc.decrypted_credentials() if show_psw else acc.get_credentials()
+
+    show(credentials, show_psw=show_psw)
 
 
 @cred.command(help='Search for credentials by username and url')
@@ -46,7 +49,8 @@ def search(username, url, show_psw):
         return
 
     acc = manager.get_active_account()
-    credentials = acc.get_credentials()
+    credentials = acc.decrypted_credentials() if show_psw else acc.get_credentials()
+
     if username:
         credentials = acc.filter_by(username, K_USERNAME, credentials)
     if url:
