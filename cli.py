@@ -1,7 +1,8 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.validation import Validator
 from functools import update_wrapper
-from account import manager, Account
+from account import Account
+from account.Manager import manager
 from keys import *
 import click
 

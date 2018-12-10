@@ -1,6 +1,6 @@
 import click
 from cli import cli, echo, has_access
-from account import manager
+from account.Manager import manager
 
 
 @cli.command(help='Login to your account')

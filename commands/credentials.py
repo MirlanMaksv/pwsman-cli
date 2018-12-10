@@ -1,7 +1,7 @@
 import click
 from tabulate import tabulate
 from cli import cli, ask, number_validator, has_access
-from account import manager
+from account.Manager import manager
 from keys import *
 
 

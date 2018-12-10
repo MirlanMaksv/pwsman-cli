@@ -1,5 +1,5 @@
 from prompt_toolkit import PromptSession
-from account import manager
+from account.Manager import manager
 import cli
 
 
