@@ -5,7 +5,7 @@ from base64 import b64decode, b64encode
 
 
 def enc_AES(data, key):
-    # convert to bytes and encode into base64
+    # convert to bytes
     data = data.encode()
     iv = b'iv' + key
     cipher = AES.new(key, AES.MODE_EAX, iv)

@@ -1,5 +1,6 @@
+pep8
 click
 prompt_toolkit
 pycryptodome
-tinydb
+peewee
 tabulate

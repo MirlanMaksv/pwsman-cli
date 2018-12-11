@@ -1,7 +1,11 @@
-class Credential:
+from peewee import CharField, ForeignKeyField
+from .db import BaseModel
+from .Account import Account
 
-    def __init__(self, username, password, url, comment=""):
-        self.username = username
-        self.password = password
-        self.url = url
-        self.comment = comment
+
+class Credential(BaseModel):
+    account = ForeignKeyField(Account, backref='credentials')
+    username = CharField()
+    password = CharField()
+    url = CharField(null=True)
+    comment = CharField(null=True)

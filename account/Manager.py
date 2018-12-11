@@ -1,25 +1,19 @@
+from peewee import fn
 from .Account import Account
-import utils
+from utils import derive_key
 
 
 class Manager:
 
     def __init__(self):
-        username = 'User'
-        password = '1234abcd'
-        hash = utils.derive_key(username.lower() + password)
-        enc_key = utils.derive_key(password)
-        self.accounts = [Account(username, hash, enc_key)]
-        self.active_account = self.accounts[0]
-        self.active_account.add_credential('example_username', 'abcdef1234', 'example.com', 'some comment')
-        self.active_account.add_credential('Mirlan', 'abcdef1234', 'facebook.com', 'Facebook account credentials')
+        self.active_account = None
 
     def login(self, master_name, master_psw):
         loggedin = False
-        hash = utils.derive_key(master_name.lower() + master_psw)
+        hash = derive_key(master_name.lower() + master_psw).hex()
         acc = self.find_account(master_name, hash)
         if acc:
-            enc_key = utils.derive_key(master_psw)
+            enc_key = derive_key(master_psw)
             acc.set_key(enc_key)
             self.active_account = acc
             loggedin = True
@@ -36,32 +30,29 @@ class Manager:
         return self.active_account
 
     def find_account(self, master_name, hash):
-        master_name = master_name.lower()
-        for acc in self.accounts:
-            if acc.master_name.lower() == master_name and acc.hash == hash:
-                return acc
+        acc = Account.get_or_none(fn.Lower(Account.master_name) == master_name.lower(), Account.hash == hash)
+        return acc
 
     def find_by_name(self, master_name):
-        master_name = master_name.lower()
-        for acc in self.accounts:
-            if acc.master_name.lower() == master_name:
-                return True
+        return Account.get_or_none(fn.Lower(Account.master_name) == master_name.lower())
 
     def create_account(self, master_name, master_psw, hint):
         acc = self.find_by_name(master_name)
         if acc:
             return False
 
-        hash = utils.derive_key(master_name.lower() + master_psw)
-        enc_key = utils.derive_key(master_psw)
-        acc = Account(master_name, hash, enc_key, hint=hint)
-        self.accounts.append(acc)
+        hash = derive_key(master_name.lower() + master_psw).hex()
+        enc_key = derive_key(master_psw)
+        acc = Account(master_name=master_name, hash=hash, hint=hint)
+        acc.save()
+        acc.set_key(enc_key)
+
         self.active_account = acc
         return True
 
     def remove_active_account(self):
         active = self.get_active_account()
-        self.accounts.remove(active)
+        active.delete_instance()
         self.logout()
 
 

@@ -3,6 +3,7 @@ from prompt_toolkit.validation import Validator
 from functools import update_wrapper
 from account import Account
 from account.Manager import manager
+from account.db import db_init, db_close
 from keys import *
 import click
 
@@ -21,6 +22,8 @@ def init():
         'close': close,
         'cred': cred,
     }
+
+    db_init()
 
 
 def handle(text):
@@ -51,6 +54,7 @@ def cli():
 @cli.command(help='Close the shell')
 def close():
     echo('GoodBye!')
+    db_close()
 
 
 def echo(*messages):
