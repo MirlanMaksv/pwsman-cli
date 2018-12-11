@@ -1,6 +1,6 @@
 import click
 from tabulate import tabulate
-from cli import cli, ask, number_validator, has_access
+from cli import cli, ask, echo, number_validator, has_access
 from account.Manager import manager
 from keys import *
 
@@ -56,7 +56,7 @@ def search(username, url, show_psw):
     if url:
         credentials = acc.filter_by(url, K_URL, credentials)
 
-    show(credentials, fields_to_hide=[K_URL], show_psw=show_psw)
+    show(credentials, show_psw=show_psw)
 
 
 @cred.command(help='Remove credential')
@@ -72,30 +72,34 @@ def remove():
     answer = ask(question)
     index = int(answer['index']) - 1
 
-    cred = acc.remove_credential(index)
-    click.echo('Removed {username} {url}'.format(username=cred.username, url=cred.url))
+    cred = acc.get_credentials()[index]
+    username = cred.username
+    url = cred.url
+
+    acc.remove_credential(index)
+    echo('Removed {username} {url}'.format(username=username, url=url))
 
 
-def show(credentials, fields_to_hide=[], show_psw=False):
-    headers = []
-    fields = vars(credentials[0])
-    for field in fields.keys():
-        if field not in fields_to_hide:
-            headers.append(field.capitalize())
+def show(credentials, fields=[K_USERNAME, K_URL, K_PASSWORD, K_COMMENT], show_psw=False):
+    headers = ["#"]
+    for field in fields:
+        headers.append(field.capitalize())
 
     data = []
     for i, c in enumerate(credentials):
-        data.append(get_as_array(c, fields_to_hide, show_psw))
+        row = [i + 1] + get_as_array(c, fields, show_psw)
+        data.append(row)
 
-    click.echo(tabulate(data, headers, tablefmt='psql'))
+    echo(tabulate(data, headers, tablefmt='psql'))
 
 
-def get_as_array(obj, fields_to_hide, show_psw):
+def get_as_array(obj, fields, show_psw):
     res = []
-    for key, value in vars(obj).items():
-        if key == K_PASSWORD and not show_psw:
+
+    for field in fields:
+        if field == K_PASSWORD and not show_psw:
             res.append('*' * 8)
-        elif key not in fields_to_hide:
-            res.append(value)
+        else:
+            res.append(getattr(obj, field))
 
     return res

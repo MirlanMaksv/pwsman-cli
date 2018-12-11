@@ -40,3 +40,6 @@ class Account(BaseModel):
 
     def remove_credential(self, index):
         return self.get_credentials()[index].delete_instance()
+
+
+from .Credential import Credential
